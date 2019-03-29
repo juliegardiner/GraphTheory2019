@@ -1,6 +1,6 @@
-#Shunting yard Algorithm
+#Regular Expression and Thompson Construction
 #Julie Gardiner
-#02/03/2019
+
 
 #This function performs the shunting yard algorithm which takes in an Infix expression
 #and returns a postfix expression
@@ -8,7 +8,8 @@ def shunt(infix):
 
 #Dictionary(like arrays indexed by strings)f specials, the values will represent the precidence of 
 #the various operatorsKleene star (highest precedence)/Concatenate(second highest)/OR(lowest)
-    specials = {'*' : 50, '.': 40, '|': 30, '+': 20}
+
+    specials = {'*' : 60, '.': 50, '|': 40, '+': 30, '?' : 20}
 
     pofix = ""
     stack = ""
@@ -114,9 +115,9 @@ def compile(pofix):
           newNFA = nfa(initial,accept)
           nfastack.append(newNFA)    
 
-#PLUS OPERATOR
+#PLUS OPERATOR (e.g at least 1 of)
         elif c == '+':   
-# Pop both nfa's off the Stack beginning with NFA2
+#Pop both nfa's off the Stack beginning with NFA2
           nfa2 = nfastack.pop()
           nfa1 = nfastack.pop() 
          
@@ -127,20 +128,38 @@ def compile(pofix):
           initial.edge1 = nfa1.initial
 #Join the accept state of edge 1 to the nfa1 initial state
           nfa1.accept.edge1 = nfa1.initial
-#Join the accept state of edge 2 to the nfa2 initial state
+#Join the initial state of edge 2 to the nfa2 accept state
           initial.edge2 = accept
-#Join nfa2 initial state to accept state
+#Join the old and new accept states to NFA1 and NFA2 initial states 
           nfa2.accept.edge1 = nfa1.initial
           nfa1.accept.edge2 = nfa2.initial
 
           nfa2.accept.edge1 = accept
 #Push to the stack
           newNFA = nfa(initial,accept)
-          nfastack.append(newNFA)    
+          nfastack.append(newNFA) 
 
 
+#? OPERATOR (0 or 1 times)
+        elif c == '?':
+#Pop both nfa's off the Stack beginning with NFA2
+          nfa2 = nfastack.pop()
+          nfa1 = nfastack.pop() 
 
-              
+#Creating new initial and accept states
+          initial = state()
+          accept = state()
+
+#Join the new initial state to the NFA1 initial state
+          initial.edge1 = nfa1.initial
+#Join the new initial state to the NFA accept state
+          initial.edge2 = accept
+#Join the accept state of edge 1 to the nfa1 initial state
+          nfa1.accept.edge1 = accept
+#Push to the stack
+          newNFA = nfa(initial,accept)
+          nfastack.append(newNFA) 
+             
 #Create a new NFA with an accept(instance) state join initial(2 edges) to accept with arrow(label)
         else:
           accept = state()        
@@ -210,9 +229,9 @@ def match(infix, string):
     return (nfa.accept in current)       
 
 #List of infix regular expressions  
-infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c","ab+"]
+infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c","ab+","a?a"]
 #Strings to be matched against the infix regular expressions
-strings = ["","abc","abbc","abcc","abad","abbbc","aaaab"]
+strings = ["","abc","abbc","abcc","abad","abbbc","aaaab","a"]
 
 for i in infixes:
     for s in strings:
