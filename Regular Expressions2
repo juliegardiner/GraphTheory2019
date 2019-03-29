@@ -1,18 +1,17 @@
-#Julie Gardiner 
-#22/03/2019
+#Shunting yard Algorithm
+#Julie Gardiner
+#02/03/2019
 
 #This function performs the shunting yard algorithm which takes in an Infix expression
 #and returns a postfix expression
 def shunt(infix):
-    """The Shunting Yard Algorithm for Converting Regular Expressions to Postfix."""
-
 
 #Dictionary(like arrays indexed by strings)f specials, the values will represent the precidence of 
 #the various operatorsKleene star (highest precedence)/Concatenate(second highest)/OR(lowest)
-    specials = {'*' : 50, '.': 40, '|': 30, '+' : 20}
+    specials = {'*' : 50, '.': 40, '|': 30, '+': 20}
 
-    pofix = " "
-    stack = " "
+    pofix = ""
+    stack = ""
 
 #take a character from infix and check what that is and push it to the stack
     for c in infix:
@@ -42,7 +41,6 @@ def shunt(infix):
      
     return pofix
 
-#THOMPSONS CONTRUCTION
 #A class(Blueprint) Takes variables and functions that are related
 #class state is a state that contains 2 edges (Think automata layout)
 #None value is like null,if we don't want to initialise with a value at that time
@@ -62,7 +60,6 @@ class nfa:
         self.accept = accept
 
 #Function that takes postfix regular expression as arg
-"""Compiles a postfix regular expression into an NFA"""
 def compile(pofix):
 #Postfix has a stack(stack of NFAs) represented by an empty list    
     nfastack = []
@@ -71,18 +68,18 @@ def compile(pofix):
 #Stack is lifo for pop off the stack  
 # CONCATENATE      
         if c == '.':
-          nfa2  =  nfastack.pop()
+          nfa2  = nfastack.pop()
           nfa1 = nfastack.pop()
 
 #Set nfa1.accept edge1 to nfa2.initial
           nfa1.accept.edge1 = nfa2.initial
 #Push this back to the nfastack
-          newNFA = (nfa(nfa1.initial,nfa2.accept))
+          newNFA = nfa(nfa1.initial,nfa2.accept)
           nfastack.append(newNFA)
          
 # OR
         elif c == '|':
-          nfa2  =  nfastack.pop()
+          nfa2 = nfastack.pop()
           nfa1 = nfastack.pop()
 #Create new initial state,connect this to initial states of NFA1 and NFA2 popped off from stack
           initial = state()
@@ -96,7 +93,7 @@ def compile(pofix):
           nfa2.accept.edge2 = accept
 
 #Push new NFA to the stack using the constructor
-          newNFA = (nfa(initial,accept))
+          newNFA = nfa(initial,accept)
           nfastack.append(newNFA)
 
 #KLEENE STAR
@@ -113,54 +110,62 @@ def compile(pofix):
 #Join the old and new accept states and NFA1 initial state
           nfa1.accept.edge1 = nfa1.initial
           nfa1.accept.edge2 = accept
-          newNFA = (nfa(initial,accept))
-          nfastack.append(newNFA)
-#PLUS +
-        elif c == '+':
-            # Pop 1 nfa off the Stack
-          nfa1 = nfastack.pop()
-          #Creating new initial and accept states
+#Push to the stack
+          newNFA = nfa(initial,accept)
+          nfastack.append(newNFA)    
+
+#PLUS OPERATOR
+        elif c == '+':   
+# Pop both nfa's off the Stack beginning with NFA2
+          nfa2 = nfastack.pop()
+          nfa1 = nfastack.pop() 
+         
+#Creating new initial and accept states
           initial = state()
           accept = state()
-#Join the new initial state to the NFA1 initial state and new accept state
+
           initial.edge1 = nfa1.initial
-          initial.edge2 = nfa1.initial
+#Join the accept state of edge 1 to the nfa1 initial state
+          nfa1.accept.edge1 = nfa1.initial
+#Join the accept state of edge 2 to the nfa2 initial state
+          initial.edge2 = accept
+#Join nfa2 initial state to accept state
+          nfa2.accept.edge1 = nfa1.initial
+          nfa1.accept.edge2 = nfa2.initial
 
-#Join the old and new accept states and NFA1 initial state
-          nfa1.accept.edge1 = accept
-          nfa1.accept.edge2 = accept
-          newNFA = (nfa(initial,accept))
-          nfastack.append(newNFA)
+          nfa2.accept.edge1 = accept
+#Push to the stack
+          newNFA = nfa(initial,accept)
+          nfastack.append(newNFA)    
 
 
 
-         
               
 #Create a new NFA with an accept(instance) state join initial(2 edges) to accept with arrow(label)
         else:
-            accept = state()        
-            initial = state()
-            initial.label = c
-            initial.edge1 = accept
+          accept = state()        
+          initial = state()
+          initial.label = c
+          initial.edge1 = accept
             
-            newNFA = (nfa(initial,accept))
-            nfastack.append(newNFA)
+          newNFA = (nfa(initial,accept))
+          nfastack.append(newNFA)
     
     #nfastack should only have a single nfa on it here
     return nfastack.pop() 
 
     #Helper function follows "e"s state
 def followes(state):
-        """Returns the set of states that can be reached from state following the arrows"""
+    """Returns the set of states that can be reached from state following the arrows"""
     #Creates a new set, with state as it only member
-        states = set()
-        states.add(state)
+    states = set()
+    states.add(state)
 
     #This will check if state has arrows labelled e from it (NB,States have 2 arrows)
     #If state.label is none,they have e arrows
-        if state.label is None:
+    if state.label is None:
             #Check if edge1 is a state
-            
+
           if state.edge1 is not None:
             #If there is edge 1 follow it..follow E arrow from whatever the state was to the current state
             # "|" is union of the set(or=) 
@@ -170,12 +175,10 @@ def followes(state):
           if state.edge2 is not None:
             
             #If there is edge 2 follow it
-            state |= followes(state.edge2)
+            states |= followes(state.edge2)
 
     #Returns the set of states 
-        return states    
-
-
+    return states    
 
 
 def match(infix, string):
@@ -198,23 +201,19 @@ def match(infix, string):
         #Check if the state is labelled s
           if c.label ==  s:
         #Add the edge1 state to the next set.
-            next = followes(c.edge1) 
+            next |= followes(c.edge1) 
         #Set current to next and flush nest
         current = next
         next = set()
 
     #Check if accept state is in the list in the set of current states
-    return (nfa.accept in current)     
+    return (nfa.accept in current)       
 
-    #List containing infix regular expressions
-infixes = ["a.b.c*", "a(b|d).c", "(a(b.b)*.c)","ab+","a+bc"]
+#List of infix regular expressions  
+infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c","ab+"]
+#Strings to be matched against the infix regular expressions
+strings = ["","abc","abbc","abcc","abad","abbbc","aaaab"]
 
-    #List of Strings to match against the infix regular expressions
-strings = [" ","abc","abbc","abcc","abab","abbbc",'aaaaabc']
-
-    #for loop loops through infixes(i) followed by loop through strings(j) and print the matches
 for i in infixes:
     for s in strings:
-        print(match(i,s), i,s)
-
-
+        print(match(i,s),i,s)
