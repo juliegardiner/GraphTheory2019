@@ -29,18 +29,18 @@ def compile(pofix):
 #Stack is lifo for pop off the stack  
 # CONCATENATE      
         if c == '.':
-          nfa2  =  nfastack.pop()
+          nfa2 = nfastack.pop()
           nfa1 = nfastack.pop()
 
 #Set nfa1.accept edge1 to nfa2.initial
           nfa1.accept.edge1 = nfa2.initial
 #Push this back to the nfastack
-          newNFA = (nfa(nfa1.initial,nfa2.accept))
+          newNFA = nfa(nfa1.initial,nfa2.accept)
           nfastack.append(newNFA)
          
 # OR
         elif c == '|':
-          nfa2  =  nfastack.pop()
+          nfa2 = nfastack.pop()
           nfa1 = nfastack.pop()
 #Create new initial state,connect this to initial states of NFA1 and NFA2 popped off from stack
           initial = state()
@@ -54,7 +54,7 @@ def compile(pofix):
           nfa2.accept.edge2 = accept
 
 #Push new NFA to the stack using the constructor
-          newNFA = (nfa(initial,accept))
+          newNFA = nfa(initial,accept)
           nfastack.append(newNFA)
 
 #KLEENE STAR
@@ -71,27 +71,67 @@ def compile(pofix):
 #Join the old and new accept states and NFA1 initial state
           nfa1.accept.edge1 = nfa1.initial
           nfa1.accept.edge2 = accept
-          newNFA = (nfa(initial,accept))
-          nfastack.append(newNFA)
+#Push to the stack
+          newNFA = nfa(initial,accept)
+          nfastack.append(newNFA)    
 
-#Push new NFA to the stack
+#PLUS OPERATOR (At least 1 of)
+        elif c == '+':   
+#Pop both nfa's off the Stack beginning with NFA2
+          nfa2 = nfastack.pop()
+          nfa1 = nfastack.pop() 
          
-              
+#Creating new initial and accept states
+          initial = state()
+          accept = state()
+
+          initial.edge1 = nfa1.initial
+#Join the accept state of edge 1 to the nfa1 initial state
+          nfa1.accept.edge1 = nfa1.initial
+#Join the initial state of edge 2 to the nfa2 accept state
+          initial.edge2 = accept
+#Join the old and new accept states to NFA1 and NFA2 initial states 
+          nfa2.accept.edge1 = nfa1.initial
+          nfa1.accept.edge2 = nfa2.initial
+
+          nfa2.accept.edge1 = accept
+#Push to the stack
+          newNFA = nfa(initial,accept)
+          nfastack.append(newNFA) 
+
+
+#? OPERATOR (0 or 1 times)
+        elif c == '?':
+#Pop both nfa's off the Stack beginning with NFA2
+          nfa2 = nfastack.pop()
+          nfa1 = nfastack.pop() 
+
+#Creating new initial and accept states
+          initial = state()
+          accept = state()
+
+#Join the new initial state to the NFA1 initial state
+          initial.edge1 = nfa1.initial
+#Join the new initial state to the NFA accept state
+          initial.edge2 = accept
+#Join the accept state of edge 1 to the nfa1 initial state
+          nfa1.accept.edge1 = accept
+#Push to the stack
+          newNFA = nfa(initial,accept)
+          nfastack.append(newNFA) 
+             
 #Create a new NFA with an accept(instance) state join initial(2 edges) to accept with arrow(label)
         else:
-            accept = state()        
-            initial = state()
-            initial.label = c
-            initial.edge1 = accept
+          accept = state()        
+          initial = state()
+          initial.label = c
+          initial.edge1 = accept
             
-            newNFA = (nfa(initial,accept))
-            nfastack.append(newNFA)
+          newNFA = (nfa(initial,accept))
+          nfastack.append(newNFA)
     
     #nfastack should only have a single nfa on it here
     return nfastack.pop() 
-
-print(compile("ab.cd.|"))
-print(compile ("aa.*"))
 
 
 

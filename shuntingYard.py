@@ -2,16 +2,20 @@
 #Julie Gardiner
 #02/03/2019
 
+
+
+
 #This function performs the shunting yard algorithm which takes in an Infix expression
 #and returns a postfix expression
 def shunt(infix):
 
 #Dictionary(like arrays indexed by strings)f specials, the values will represent the precidence of 
 #the various operatorsKleene star (highest precedence)/Concatenate(second highest)/OR(lowest)
-    specials = {'*' : 50, '.': 40, '|': 30}
 
-    pofix = " "
-    stack = " "
+    specials = {'*' : 60, '.': 50, '|': 40, '+': 30, '?' : 20}
+
+    pofix = ""
+    stack = ""
 
 #take a character from infix and check what that is and push it to the stack
     for c in infix:
@@ -40,4 +44,3 @@ def shunt(infix):
         pofix,stack = pofix + stack[-1],stack[:-1]
      
     return pofix
-print(shunt("(a.b)|(c*.d)"))    
