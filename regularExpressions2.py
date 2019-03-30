@@ -1,3 +1,4 @@
+
 #Regular Expression and Thompson Construction
 #Julie Gardiner
 
@@ -69,7 +70,7 @@ def compile(pofix):
 #Stack is lifo for pop off the stack  
 # CONCATENATE      
         if c == '.':
-          nfa2  = nfastack.pop()
+          nfa2 = nfastack.pop()
           nfa1 = nfastack.pop()
 
 #Set nfa1.accept edge1 to nfa2.initial
@@ -229,10 +230,13 @@ def match(infix, string):
     return (nfa.accept in current)       
 
 #List of infix regular expressions  
-infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c","ab+","a?a"]
+#infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c","ab+","a?a"]
+infixes = raw_input("Please enter an Infix Regular Expression ->")
+type(infixes)
 #Strings to be matched against the infix regular expressions
-strings = ["","abc","abbc","abcc","abad","abbbc","aaaab","a"]
-
+#strings = ["","abc","abbc","abcc","abad","abbbc","aaaab","a"]
+strings = raw_input("Please enter a String value to be matched against the infix ->")
+type(strings)
 for i in infixes:
     for s in strings:
         print(match(i,s),i,s)
