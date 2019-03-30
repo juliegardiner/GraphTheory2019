@@ -231,12 +231,15 @@ def match(infix, string):
 
 #List of infix regular expressions  
 #infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c","ab+","a?a"]
-infixes = raw_input("Please enter an Infix Regular Expression ->")
+infixes = input("Please enter an Infix Regular Expression ->")
 type(infixes)
 #Strings to be matched against the infix regular expressions
 #strings = ["","abc","abbc","abcc","abad","abbbc","aaaab","a"]
-strings = raw_input("Please enter a String value to be matched against the infix ->")
+strings = input("Please enter a String value to be matched against the infix ->")
 type(strings)
-for i in infixes:
-    for s in strings:
-        print(match(i,s),i,s)
+
+print("The result is: ", match(infixes,strings))
+
+#for i in infixes:
+#    for s in strings:
+#       print(match(i,s),i,s)
