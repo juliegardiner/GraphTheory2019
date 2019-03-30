@@ -222,7 +222,7 @@ def match(infix, string):
           if c.label ==  s:
         #Add the edge1 state to the next set.
             next |= followes(c.edge1) 
-        #Set current to next and flush nest
+        #Set current to next and flush next
         current = next
         next = set()
 
@@ -230,16 +230,12 @@ def match(infix, string):
     return (nfa.accept in current)       
 
 #List of infix regular expressions  
-#infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c","ab+","a?a"]
-infixes = input("Please enter an Infix Regular Expression ->")
-type(infixes)
+infixes = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c","ab+","a?a"]
+
 #Strings to be matched against the infix regular expressions
-#strings = ["","abc","abbc","abcc","abad","abbbc","aaaab","a"]
-strings = input("Please enter a String value to be matched against the infix ->")
-type(strings)
+strings = ["","abc","abbc","abcc","abad","abbbc","aaaab","a"]
 
-print("The result is: ", match(infixes,strings))
 
-#for i in infixes:
-#    for s in strings:
-#       print(match(i,s),i,s)
+for i in infixes:
+    for s in strings:
+       print(match(i,s),i,s)
