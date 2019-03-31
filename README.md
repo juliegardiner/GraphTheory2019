@@ -12,7 +12,7 @@ How To Run:
 
 To clone this repository Git needs to be installed, it can be downloaded here https://git-scm.com/
 
-- git clone  https://github.com/juliegardiner/GraphTheory2019 or download zip (into a folder of your choice).
+- git clone  https://github.com/juliegardiner/GraphTheory2019.git or download zip (into a folder of your choice).
 
 To run this program in the command prompt, navigate to this folder and change directory into GraphTheory2019. 
 
