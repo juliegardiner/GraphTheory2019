@@ -11,9 +11,13 @@ In order to run this program, Python 3.7.3 needs to be installed in your machine
 How To Run:
 
 To clone this repository Git needs to be installed, it can be downloaded here https://git-scm.com/
+
 - git clone  https://github.com/juliegardiner/GraphTheory2019 or download zip (into a folder of your choice).
 
-- To run this program, in the command prompt, navigate to this folder and input:
- 
-  python runner.py
+To run this program in the command prompt, navigate to this folder and change directory into GraphTheory2019. 
+
+-> cd GraphTheory2019
+
+input: 
+-> python runner.py
  
