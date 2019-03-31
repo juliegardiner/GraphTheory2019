@@ -3,8 +3,6 @@
 #02/03/2019
 
 
-
-
 #This function performs the shunting yard algorithm which takes in an Infix expression
 #and returns a postfix expression
 def shunt(infix):
