@@ -1,5 +1,5 @@
-import thompsons
-from thompsons import compile
+import Thompsons
+from Thompsons import compile
 import shuntingYard
 from shuntingYard import shunt
 #Regular Expressions Source: https://web.microsoftstream.com/video/6b4ba6a4-01b7-4bde-8f85-b4b96abc902a
